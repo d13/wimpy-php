@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>${local.title}</title>
+    <meta name="description" content="${local.description}" />
+    <meta name="keywords" content="${local.keywords}" />
+    <script type="text/javascript" src="assets/scripts/dScripted.js"></script>
+    <script type="text/javascript" src="assets/scripts/global.js"></script>
+    <script type="text/javascript" src="assets/scripts/application.js"></script>
+    <link rel="stylesheet" type="text/css" href="assets/styles/template.css" />
+    <link rel="stylesheet" type="text/css" href="assets/styles/pages.css" />
+</head>
+
+<body>
+<div id="site_wrapper">
+	<div id="wrapper" class="${local.view-class}">
+		<div id="header">
+	        ${template.header}
+	    </div>
+		<div id="nav">
+	        ${template.navigation}
+	    </div>
+		<div id="content">
+			${template.content}
+	    </div>
+		<div id="footer">
+	        ${template.footer}
+	    </div>
+	</div>
+</div>
+</body>
+</html>
