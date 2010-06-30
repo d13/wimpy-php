@@ -11,13 +11,15 @@ class AssetsController extends BaseController {
 		$this->log->write("HomeController > destroyed");
 	}
 	
+	//TODO: Get this to read styles folder, concat the files & minify it. Should be cached.
 	public function getCss () {
 		$this->req_key = "blank";
 		$this->template = "blank";
 		$content = "* { padding:0; margin:0; }";
 		Model::setLocalValue("content",$content);
 		header("Content-type: text/css; charset: UTF-8");
-	}ß
+	}
+	//TODO: Get this to read scripts folder, concat the files & minify it. Should be cached.
 	public function getJs () {
 		$this->req_key = "blank";
 		$this->template = "blank";
