@@ -12,7 +12,7 @@ class AssetsController extends BaseController {
 	}
 	
 	//TODO: Get this to read styles folder, concat the files & minify it. Should be cached.
-	public function getCss () {
+	public function getStyles () {
 		$this->req_key = "blank";
 		$this->template = "blank";
 		$content = "* { padding:0; margin:0; }";
@@ -20,7 +20,7 @@ class AssetsController extends BaseController {
 		header("Content-type: text/css; charset: UTF-8");
 	}
 	//TODO: Get this to read scripts folder, concat the files & minify it. Should be cached.
-	public function getJs () {
+	public function getScripts () {
 		$this->req_key = "blank";
 		$this->template = "blank";
 		$content = "function howdy () { alert('howdy'); }";
