@@ -22,7 +22,7 @@ class Inflector {
 				$final_string .= self::capitalize($word_list[$i]);
 			}
 		}
-		
+		$log->write("toCamelCase completed: $final_string");
 		return $final_string;
 	}
 }

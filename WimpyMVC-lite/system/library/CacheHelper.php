@@ -22,6 +22,13 @@ class CacheHelper {
 			$cache_file .= "-".$req_param;
 		}
 		$cache_file .= CACHE_EXT;
+		if (strpos($cache_file,"get_styles") > -1) {
+			$cache_file .= "css";
+		} else if (strpos($cache_file,"get_scripts") > -1) {
+			$cache_file .= "js";
+		} else {
+			$cache_file .= "txt";
+		}
 		
 		return $cache_file;
 	}

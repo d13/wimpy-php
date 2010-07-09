@@ -26,7 +26,7 @@ class Dispatcher {
 			self::$log->write("Dispatcher > initialize :: action: $req_action");
 		} else {
 			$req_action = NULL;
-			self::$log->write("Dispatcher > initialize :: default action: NONE SPECIFIED");
+			self::$log->write("Dispatcher > initialize :: action: NONE");
 		}
 		
 		// SET PARAM
@@ -37,7 +37,6 @@ class Dispatcher {
 			$req_param = NULL;
 			self::$log->write("Dispatcher > initialize :: param: NONE");
 		}
-		
 		self::process($req_key,$req_action,$req_param);
 		exit();
 	}
@@ -69,25 +68,35 @@ class Dispatcher {
 		$cache_file = CacheHelper::makeFileNameFromUrl($req_key, $req_action, $req_param);
 		$cache_file_path = CACHE_PATH.'/'.$cache_file;
 		self::$log->write("Dispatcher > loadFromCache :: filename: $cache_file");
-		self::$log->write("Dispatcher > loadFromCache :: filename w path: $cache_file_path");
+		self::$log->write("Dispatcher > loadFromCache :: filename w path: $cache_file_path",1);
 		$time = time();
 		$file_exists = file_exists($cache_file_path);
 		if ($file_exists) {
 			$time_diff = $time - filemtime($cache_file_path);
 			$time_diff_ok = ($time_diff < CACHE_LIMIT) ? TRUE : FALSE;
-			self::$log->write("Time diff of $cache_file is: $time_diff");
+			self::$log->write("Time diff of $cache_file is: $time_diff",2);
 		} else {
 			$time_diff_ok = FALSE;
 		}
 		if ($file_exists && $time_diff_ok) {
-			self::$log->write("Retrieving contents of $cache_file");
+			self::$log->write("Dispatcher > loadFromCache :: Retrieving $cache_file",1);
 			$content = @file_get_contents($cache_file_path);
+			
+			$file_ext = substr($cache_file,(strlen($cache_file)-4),4);
+			self::$log->write("FILE EXT: $file_ext",2);
+			if ($file_ext == ".css") {
+				header("Content-type: text/css");
+				self::$log->write("FILE IS CSS",2);
+			} else if ($file_ext == ".js") {
+				header("Content-type: text/javascript");
+				self::$log->write("FILE IS JS",2);
+			}
 			return $content;
 		} else {
 			if (!$file_exists) {
-				self::$log->write("Dispatcher > loadFromCache :: Cache file not found");
+				self::$log->write("Dispatcher > loadFromCache :: Cache file not found",1);
 			} else if ($file_exists && $time_diff_ok) {
-				self::$log->write("Dispatcher > loadFromCache :: Cache is too old");
+				self::$log->write("Dispatcher > loadFromCache :: Cache is too old",1);
 			}
 			return NULL;
 		}
@@ -100,31 +109,35 @@ class Dispatcher {
 		$objArr = Config::getController($req_key);
 		$filename = CONTROLLER_PATH.'/'.$objArr[0].'.php';
 		if (file_exists($filename)) {
-			self::$log->write("Dispatcher > loadController: $objArr[0]");
+			self::$log->write("Dispatcher > loadController > class: $objArr[0]",1);
 			require_once($filename);
 			$obj = new $objArr[0];
 		} else { // No controller found
-			self::$log->write("Dispatcher > loadController > Key: {$req_key} does not exist");
+			self::$log->write("Dispatcher > loadController > key: $req_key has no controller",1);
 			$buffer = self::load("error");
 		}
 		$buffer = "";
 		if (!empty($obj)) {
 			$isCachable = $objArr[1];
 			if (!empty($req_action)) {
-			
 				//TODO: Fix actions from underscores to camel-case
 				if(strpos($req_action,'_') != FALSE){
 					$action = Inflector::toCamelCase($req_action,'_');
+				} else { 
+					$action = $req_action; 
 				}
-				else { $action = $req_action; }
-				
 				if (method_exists($obj,$action)) { 
 					if(!empty($req_param)) { // If params are passed
-						self::$log->write("Dispatcher > loadController :: calling {$req_key}->{$action}({$req_param})");
+						self::$log->write("Dispatcher > loadFromController -- param string: $req_param");
 						
 						$req_param_list = array();
 						$req_param_list = explode("/",$req_param);
+						for($i=0; $i < sizeof($req_param_list); ++$i) {
+							self::$log->write("Dispatcher > loadFromController -- param array > value: ".$req_param_list[$i]);
+						}
+
 						call_user_func_array(array($obj, $action),$req_param_list);
+						self::$log->write("Dispatcher > loadController :: called $req_key > $action({$req_param})");
 					} else { // Call function with no params
 						self::$log->write("Dispatcher > loadController :: calling {$req_key}->{$action}()");
 						$obj->$action();

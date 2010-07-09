@@ -15,52 +15,57 @@ class AssetsController extends BaseController {
 	public function getStyles () {
 		$args = func_get_args();
 		if (count($args) > 0) {
-			$func = create_function('$value','return $BASE_DIR."/assets/styles/".$value;');
+			$func = create_function('$value','return "/assets/styles/".$value;');
 			$args = array_map($func,$args);
 			$content = $this->combineFiles($args);
-			$this->log->write("AssetsController > getStyles:");
-			$this->log->write($content);
 		} else {
-			$content = "* { padding:0; margin:0; }";
+			$content = "/* CCS */";
 		}
 		
 		$this->req_key = "blank";
 		$this->template = "blank";
 		
 		Model::setLocalValue("content",$content);
-		header("Content-type: text/css; charset: UTF-8");
+		header("Content-type: text/css");
 	}
 	//TODO: Get this to read scripts folder, concat the files & minify it. Should be cached.
 	public function getScripts () {
 		$args = func_get_args();
 		if (count($args) > 0) {
-			$func = create_function('$value','return $BASE_DIR."/assets/scripts/".$value;');
+			$func = create_function('$value','return "/assets/scripts/".$value;');
 			$args = array_map($func,$args);
 			$content = $this->combineFiles($args);
-			$this->log->write("AssetsController > getStyles:");
-			$this->log->write($content);
 		} else {
-			$content = "function howdy () { alert('howdy'); }";
+			$content = "/* JS */";
 		}
 		
 		$this->req_key = "blank";
 		$this->template = "blank";
 		
 		Model::setLocalValue("content",$content);
-		header("Content-type: text/javascript; charset: UTF-8");
+		header("Content-type: text/javascript");
 	}
 	
 	protected function generic (){
 		$this->req_key = "blank";
 		$this->template = "blank";
-		Model::setLocalValue("content","");
+		Model::setLocalValue("content","/* No Data */");
 	}
 	
 	private function combineFiles ($argArr) {
 		$str = "";
 		for($i=0; $i < sizeof($argArr); ++$i) {
-			if (file_exists($argArr[i])) {
-				$str .= @file_get_contents($argArr[i]);
+			$filename = $argArr[$i];
+			if (!empty($filename)) {
+				$file_w_path = BASE_DIR.$argArr[$i];
+				if (file_exists($file_w_path)) {
+					$str .= @file_get_contents($file_w_path)."\n";
+					$this->log->write("AssetsController > combineFiles -- added: $file_w_path");
+				} else {
+					$this->log->write("AssetsController > combineFiles -- can't find: $file_w_path");
+				}
+			} else {
+				$this->log->write("AssetsController > combineFiles -- filename missing");
 			}
 		}
 		return $str;
