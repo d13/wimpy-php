@@ -39,6 +39,7 @@ class Dispatcher {
 		}
 		
 		self::process($req_key,$req_action,$req_param);
+		exit();
 	}
 	public static function process($req_key,$req_action=NULL,$req_param=NULL) {
 		$result = self::load($req_key,$req_action,$req_param);
@@ -48,8 +49,10 @@ class Dispatcher {
 		Model::clearLocalValues();
 	}
 	public static function load($req_key,$req_action=NULL,$req_param=NULL) {
-		self::$log->write("Dispatcher > load :: params: $req_key - $req_action - $req_param",1);
-		if(CACHE_ENABLED) {
+		self::$log->write("Dispatcher > load :: args: $req_key - $req_action - $req_param",1);
+		
+		self::$log->write("Dispatcher > load :: request method is ".$_SERVER['REQUEST_METHOD'],1);
+		if(CACHE_ENABLED && ($_SERVER['REQUEST_METHOD'] == "GET")) {
 			self::$log->write("Dispatcher > load :: caching is on",1);
 			$result = self::loadFromCache($req_key,$req_action,$req_param);
 		} else {
@@ -68,12 +71,24 @@ class Dispatcher {
 		self::$log->write("Dispatcher > loadFromCache :: filename: $cache_file");
 		self::$log->write("Dispatcher > loadFromCache :: filename w path: $cache_file_path");
 		$time = time();
-		if (file_exists($cache_file_path) && (($time - filemtime($cache_file_path)) <  CACHE_LIMIT)) {
-			self::$log->write("Time diff of $cache_file is: ".($time - filemtime($cache_file_path)));
+		$file_exists = file_exists($cache_file_path);
+		if ($file_exists) {
+			$time_diff = $time - filemtime($cache_file_path);
+			$time_diff_ok = ($time_diff < CACHE_LIMIT) ? TRUE : FALSE;
+			self::$log->write("Time diff of $cache_file is: $time_diff");
+		} else {
+			$time_diff_ok = FALSE;
+		}
+		if ($file_exists && $time_diff_ok) {
+			self::$log->write("Retrieving contents of $cache_file");
 			$content = @file_get_contents($cache_file_path);
 			return $content;
 		} else {
-			self::$log->write("Dispatcher > loadFromCache :: Invalid cache file");
+			if (!$file_exists) {
+				self::$log->write("Dispatcher > loadFromCache :: Cache file not found");
+			} else if ($file_exists && $time_diff_ok) {
+				self::$log->write("Dispatcher > loadFromCache :: Cache is too old");
+			}
 			return NULL;
 		}
 	}
