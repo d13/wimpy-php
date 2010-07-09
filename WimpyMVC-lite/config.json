@@ -5,9 +5,9 @@
 	"system.logs_level":"0",
 	"system.logs_path":"/temp/logs",
 	
-	"system.cache_enabled":false,
+	"system.cache_enabled":true,
 	"system.cache_path":"/temp/cache",
-	"system.cache_ext":".cache.txt",
+	"system.cache_ext":".cache.",
 	"system.cache_limit":"3600",
 	
 	"system.default_key":"home",
@@ -25,7 +25,7 @@
 	
 	"controllers.home":["HomeController",false],
 	"controllers.admin":["AdminController",false],
-	"controllers.assets":["AssetsController",false],
+	"controllers.assets":["AssetsController",true],
 	"controllers.login":["LoginController",false],
 	"controllers.error":["ErrorController",false],
 	
