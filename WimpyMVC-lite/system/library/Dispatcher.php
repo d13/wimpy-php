@@ -98,24 +98,24 @@ class Dispatcher {
 			if (!empty($req_action)) {
 			
 				//TODO: Fix actions from underscores to camel-case
-				if(strpos($req_action,'_')){
+				if(strpos($req_action,'_') != FALSE){
 					$action = Inflector::toCamelCase($req_action,'_');
 				}
 				else { $action = $req_action; }
 				
 				if (method_exists($obj,$action)) { 
 					if(!empty($req_param)) { // If params are passed
-						self::$log->write("Dispatcher > loadController :: calling {$req_key}->{$req_action}({$req_param})");
+						self::$log->write("Dispatcher > loadController :: calling {$req_key}->{$action}({$req_param})");
 						
 						$req_param_list = array();
 						$req_param_list = explode("/",$req_param);
-						call_user_func_array(array($obj, $req_action),$req_param_list);
+						call_user_func_array(array($obj, $action),$req_param_list);
 					} else { // Call function with no params
-						self::$log->write("Dispatcher > loadController :: calling {$req_key}->{$req_action}()");
-						$obj->$req_action();
+						self::$log->write("Dispatcher > loadController :: calling {$req_key}->{$action}()");
+						$obj->$action();
 					}
 				} else { // If method does not exist 
-					self::$log->write("Dispatcher > loadController :: {$req_key}->{$req_action}() does not exist");
+					self::$log->write("Dispatcher > loadController :: {$req_key}->{$action}() does not exist");
 					$buffer = self::load("error");
 				}
 			}else { // Call default method

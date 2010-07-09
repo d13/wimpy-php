@@ -1,5 +1,7 @@
 <?php
 
+//echo ($_SERVER['DOCUMENT_ROOT']);
+
 // Open session & check for flag
 session_start();
 if (!isset($_SESSION['initiated'])) {

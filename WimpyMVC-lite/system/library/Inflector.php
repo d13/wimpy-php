@@ -8,6 +8,8 @@ class Inflector {
 		return ucwords($string);
 	}
 	public static function toCamelCase ($string,$separator="_") {
+		$log = Log::getInstance();
+		$log->write("toCamelCase called");
 		$final_string = "";
 		
 		$word_list = array();
@@ -16,8 +18,9 @@ class Inflector {
 		for($i=0; $i < sizeof($word_list); ++$i) {
 			if ($i == 0) {
 				$final_string = $word_list[$i];
+			} else {
+				$final_string .= self::capitalize($word_list[$i]);
 			}
-			$final_string .= self::capitalize($word_list[$i]);
 		}
 		
 		return $final_string;
