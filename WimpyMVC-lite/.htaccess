@@ -1,5 +1,6 @@
-AddType x-mapp-php5 .php
-AddHandler x-mapp-php5 .php
+# Add this only if neccesary
+# AddType x-mapp-php5 .php
+# AddHandler x-mapp-php5 .php
 
 # Block access to config file
 <files config.json>
@@ -17,7 +18,7 @@ RewriteEngine on
 
 # Ignore static assests
 
-RewriteRule \.(js|css|jpe?g|gif|png|txt)$ - [L]
+RewriteRule \.(js|css|jpe?g|gif|png|txt|swf)$ - [L]
 
 ###################################################
 
