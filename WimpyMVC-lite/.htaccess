@@ -1,3 +1,6 @@
+AddType x-mapp-php5 .php
+AddHandler x-mapp-php5 .php
+
 # Block access to config file
 <files config.json>
 order allow,deny
