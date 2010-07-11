@@ -11,7 +11,6 @@ class AssetsController extends BaseController {
 		$this->log->write("AssetsController > destroyed");
 	}
 	
-	//TODO: Get this to read styles folder, concat the files & minify it. Should be cached.
 	public function getStyles () {
 		$args = func_get_args();
 		if (count($args) > 0) {
@@ -28,7 +27,6 @@ class AssetsController extends BaseController {
 		Model::setLocalValue("content",$content);
 		header("Content-type: text/css");
 	}
-	//TODO: Get this to read scripts folder, concat the files & minify it. Should be cached.
 	public function getScripts () {
 		$args = func_get_args();
 		if (count($args) > 0) {
@@ -52,6 +50,7 @@ class AssetsController extends BaseController {
 		Model::setLocalValue("content","/* No Data */");
 	}
 	
+	//TODO: Get this to minify the files.
 	private function combineFiles ($argArr) {
 		$str = "";
 		for($i=0; $i < sizeof($argArr); ++$i) {
