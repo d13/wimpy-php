@@ -1,14 +1,6 @@
 <?php
 
 class CacheHelper {
-	private static $buffer = "";
-    public static function getBuffer() {
-        return self::$buffer;
-    }
-    public static function setBuffer($bufferTxt) {
-        self::$buffer = $bufferTxt;
-    }
-    
 	public static function makeFileName ($req_key,$req_action,$req_param_list) {
 		$log = Log::getInstance();
 		$cache_file = $req_key;
@@ -41,22 +33,22 @@ class CacheHelper {
 		}
 		return self::makeFileName($req_key, $req_action, $req_param_list);
 	}
-	public static function saveView ($key=NULL,$action=NULL,$params=NULL) {
+	public static function saveView ($buffer,$key,$action=NULL,$params=NULL) {
 		$log = Log::getInstance();
-		if (!empty($key)) {
+		if (!empty($key) && !empty($key)) {
 			$filename = self::makeFileName($key, $action, $params);
 			$log->write("CacheHelper > cacheView - filename: ".$filename);
-			self::write($filename, self::$buffer);
+			self::write($filename,$buffer);
 		} else {
 			$log->write("CacheHelper > cacheView - filename: NO KEY PRESENT");
 		}
 	}
-	private static function write ($filename) {
+	private static function write ($filename,$buffer) {
 		$log = Log::getInstance();
 	    $fileTitle = CACHE_PATH.'/'.$filename;
 		$log->write("CacheHelper > cacheView - filepath: ".$fileTitle);
 		//$log->write("CacheHelper > cacheView - text to cache: \n".self::$buffer);
-		file_put_contents($fileTitle,self::$buffer);
+		file_put_contents($fileTitle,$buffer);
 		self::$buffer = "";
 	}
 }

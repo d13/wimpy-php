@@ -61,7 +61,7 @@ class Dispatcher {
 			self::$log->write("Dispatcher > load :: loading from controller",1);
 			$result = self::loadFromController($req_key,$req_action,$req_param);
 		}
-		CacheHelper::setBuffer("");
+		Response::clearBuffer();
 		return $result;
 	}
 	private static function loadFromCache ($req_key,$req_action,$req_param) {
@@ -102,9 +102,6 @@ class Dispatcher {
 		}
 	}
 	private static function loadFromController ($req_key,$req_action,$req_param) {
-		if (empty(self::$log)) {
-			self::$log = Log::getInstance();
-		}
 		// GET CONTROLLER
 		$objArr = Config::getController($req_key);
 		$filename = CONTROLLER_PATH.'/'.$objArr[0].'.php';
@@ -151,10 +148,10 @@ class Dispatcher {
 				$obj->execute();
 			}
 			$obj = null;
-			$buffer = CacheHelper::getBuffer();
+			$buffer = Response::getBuffer();
 			if ($isCachable) {
 				$params = !empty($req_param_list) ? $req_param_list : NULL;
-				CacheHelper::saveView($req_key,$req_action,$params);
+				CacheHelper::saveView($req_key,$req_action,$params,$buffer);
 			}
 		}
 		

@@ -46,4 +46,7 @@ class Config {
 	public static function getViewPath ($key) {
 		return VIEW_PATH.self::getView($key);
 	}
+	public static function getDao ($key) {
+		return self::get("dao.$key");
+	}
 }
