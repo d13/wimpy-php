@@ -38,5 +38,12 @@
 	"views.template.blank":"/template/blank.html",
 	"views.template.header":"/common/header.html",
 	"views.template.nav":"/common/navigation.html",
-	"views.template.footer":"/common/footer.html"
+	"views.template.footer":"/common/footer.html",
+	
+	"data.mysql.host":"db2109.perfora.net",
+	"data.mysql.database":"db301826798",
+	"data.mysql.user":"dbo301826798",
+	"data.mysql.password":"101001celes",
+	
+	"dao.Customer":["CustomerDAO","CustomerDAOImpl"]
 }
