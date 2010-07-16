@@ -78,7 +78,7 @@ class Dispatcher {
 		} else {
 			$time_diff_ok = FALSE;
 		}
-		if ($file_exists && $time_diff_ok) {
+		if ($time_diff_ok) {
 			self::$log->write("Dispatcher > loadFromCache :: Retrieving $cache_file",1);
 			$content = @file_get_contents($cache_file_path);
 			
@@ -86,17 +86,17 @@ class Dispatcher {
 			self::$log->write("FILE EXT: $file_ext",2);
 			if ($file_ext == ".css") {
 				header("Content-type: text/css");
-				self::$log->write("FILE IS CSS",2);
+				self::$log->write("CACHE FILE IS CSS",2);
 			} else if ($file_ext == ".js") {
 				header("Content-type: text/javascript");
-				self::$log->write("FILE IS JS",2);
+				self::$log->write("CACHE FILE IS JS",2);
 			}
 			return $content;
 		} else {
-			if (!$file_exists) {
-				self::$log->write("Dispatcher > loadFromCache :: Cache file not found",1);
-			} else if ($file_exists && $time_diff_ok) {
+			if ($file_exists) {
 				self::$log->write("Dispatcher > loadFromCache :: Cache is too old",1);
+			} else {
+				self::$log->write("Dispatcher > loadFromCache :: Cache file not found",1);
 			}
 			return NULL;
 		}
