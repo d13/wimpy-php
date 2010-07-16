@@ -4,7 +4,7 @@ class LoginController extends BaseController {
 	
 	public function __construct () {
 		$this->log = Log::getInstance();
-		$this->log->write("AdminController > created");
+		$this->log->write("LoginController > created");
 	}
 	public function __destruct () {
 		// is req_key is not empty
@@ -26,6 +26,16 @@ class LoginController extends BaseController {
 			Dispatcher::process($actionKey);
 		} else {
 			Model::setGlobalValue("logged_in",FALSE);
+			Dispatcher::process("login");
+		}
+	}
+	public function logout () {
+		$actionKey = Request::$get["action_key"]; 
+		session_regenerate_id();
+		Model::setGlobalValue("logged_in",FALSE);
+		if (!empty($actionKey)){
+			Dispatcher::process($actionKey);
+		} else {
 			Dispatcher::process("login");
 		}
 	}
