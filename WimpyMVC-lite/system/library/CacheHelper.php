@@ -49,6 +49,5 @@ class CacheHelper {
 		$log->write("CacheHelper > cacheView - filepath: ".$fileTitle);
 		//$log->write("CacheHelper > cacheView - text to cache: \n".self::$buffer);
 		file_put_contents($fileTitle,$buffer);
-		self::$buffer = "";
 	}
 }
