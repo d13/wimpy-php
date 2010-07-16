@@ -151,7 +151,7 @@ class Dispatcher {
 			$buffer = Response::getBuffer();
 			if ($isCachable) {
 				$params = !empty($req_param_list) ? $req_param_list : NULL;
-				CacheHelper::saveView($req_key,$req_action,$params,$buffer);
+				CacheHelper::saveView($buffer,$req_key,$req_action,$params);
 			}
 		}
 		
