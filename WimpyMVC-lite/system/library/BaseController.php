@@ -21,6 +21,6 @@ abstract class BaseController {
 		$view = new View($this->req_key,$this->template);
 		$viewStr = $view->toString();
 		$pagecontent = new ModelAndView($viewStr);
-		CacheHelper::setBuffer($pagecontent->toString());
+		Response::setBuffer($pagecontent->toString());
 	}
 }
